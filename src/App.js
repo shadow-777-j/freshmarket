@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion'; // <-- Make sure this is here!
-import Navbar from './components/Navbar';
 import About from './components/About';
 import FruitCard from './components/FruitCard';
 import Basket from './components/Basket';
