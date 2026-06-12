@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion'; // <-- Make sure this is here!
+import { motion, AnimatePresence } from 'framer-motion'; 
 import About from './components/About';
 import FruitCard from './components/FruitCard';
 import Basket from './components/Basket';
 import { products } from './data';
 
 function App() {
+  const [showLoader, setShowLoader] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [cart, setCart] = useState([]);
   const [isBasketOpen, setIsBasketOpen] = useState(false);
 
-  // AUTH STATE: Toggles layout screens: 'all' (main site), 'login', or 'register'
-  // When a user clicks your header "Login" or "Register" buttons, we update this state!
+  // AUTH STATE
   const [authView, setAuthView] = useState('all');
 
-  // REGISTRATION FORM STATE (Matches image_d2cafc.png)
+  // REGISTRATION / LOGIN FORM STATES
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', agreeTerms: false });
-  // LOGIN FORM STATE (Matches image_d2cae4.jpg)
   const [loginForm, setLoginForm] = useState({ username: '', password: '', rememberMe: false });
 
   // Main site support contact section state
@@ -34,23 +33,20 @@ function App() {
   const groceries = products.filter(item => item.category === 'grocery');
   const gridStyle = "grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto";
 
-  // Form Submission Mock Handlers for Auth
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     if (!registerForm.agreeTerms) {
       alert("Please check and agree to the Terms & Conditions first! 📜");
       return;
     }
-    console.log("Registering User profile data payload:", registerForm);
-    alert(`Account created successfully for ${registerForm.name}! Logging you in now... 🎉`);
-    setAuthView('all'); // Re-routes cleanly back to shop layout storefront view upon entry completion
+    alert(`Account created successfully for ${registerForm.name}! 🎉`);
+    setAuthView('all');
   };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    console.log("Authenticating login user profile session payload:", loginForm);
-    alert(`Welcome back, ${loginForm.username}! Session opened. 🔓`);
-    setAuthView('all'); // Redirect back to active marketplace dashboard shelf view layout
+    alert(`Welcome back, ${loginForm.username}! 🔓`);
+    setAuthView('all');
   };
 
   const handleFormSubmit = (e) => {
@@ -67,8 +63,95 @@ function App() {
   return (
     <div className="min-h-screen bg-purple-950 pb-20 selection:bg-yellow-400 selection:text-purple-950">
       
+      {/* ================= REALISTIC SHORELINE WAVE LOADER (1000186287.jpg Style) ================= */}
+      <AnimatePresence>
+        {showLoader && (
+          <motion.div 
+            className="fixed inset-0 z-[9999] pointer-events-none flex flex-col justify-end overflow-hidden"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          >
+            {/* Main Ocean Container - Matches the deep jade background of 1000186287.jpg */}
+            <motion.div
+              className="w-full relative bg-gradient-to-t from-[#0b332d] via-[#114b43] to-[#14534a]"
+              initial={{ height: "0vh" }}
+              animate={{ height: ["0vh", "100vh", "100vh", "0vh"] }}
+              transition={{ 
+                times: [0, 0.4, 0.65, 1],
+                duration: 3.4, 
+                ease: [0.76, 0, 0.24, 1] 
+              }}
+              onAnimationComplete={() => setShowLoader(false)}
+            >
+              
+              {/* Crest Wrapper containing our layered fluid paths */}
+              <div className="absolute top-0 left-0 w-full transform -translate-y-[98%] leading-[0]">
+                
+                {/* LAYER 1: Deep Turquoise Transition Swell */}
+                <svg viewBox="0 0 1440 240" className="w-full h-auto absolute top-0 left-0 fill-[#16a34a]/20">
+                  <motion.path 
+                    animate={{
+                      d: [
+                        "M0,128C120,149,240,171,360,165.3C480,160,600,128,720,112C840,96,960,96,1080,112C1200,128,1320,160,1440,176L1440,240L0,240Z",
+                        "M0,160C120,139,240,117,360,122.7C480,128,600,160,720,165.3C840,171,960,149,1080,133.3C1200,117,1320,107,1440,112L1440,240L0,240Z",
+                        "M0,128C120,149,240,171,360,165.3C480,160,600,128,720,112C840,96,960,96,1080,112C1200,128,1320,160,1440,176L1440,240L0,240Z"
+                      ]
+                    }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                    fill="#0f766e"
+                  />
+                </svg>
+
+                {/* LAYER 2: Vibrant Tropical Turquoise Shallows (From the image body) */}
+                <svg viewBox="0 0 1440 240" className="w-full h-auto absolute top-4 left-0">
+                  <motion.path 
+                    animate={{
+                      d: [
+                        "M0,96C96,117,192,139,288,133.3C384,128,480,96,576,96C672,96,768,128,864,138.7C960,149,1056,139,1152,117C1248,96,1344,64,1440,53.3L1440,240L0,240Z",
+                        "M0,64C96,96,192,128,288,122.7C384,117,480,75,576,80C672,85,768,139,864,149.3C960,160,1056,128,1152,112C1248,96,1344,96,1440,112L1440,240L0,240Z",
+                        "M0,96C96,117,192,139,288,133.3C384,128,480,96,576,96C672,96,768,128,864,138.7C960,149,1056,139,1152,117C1248,96,1344,64,1440,53.3L1440,240L0,240Z"
+                      ]
+                    }}
+                    transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                    fill="#2dd4bf"
+                  />
+                </svg>
+
+                {/* LAYER 3: Detailed White Sea Foam Border (The breaking edge in 1000186287.jpg) */}
+                <svg viewBox="0 0 1440 240" className="w-full h-auto relative z-10">
+                  <motion.path 
+                    animate={{
+                      d: [
+                        "M0,80C48,96,96,112,144,106.7C192,101,240,75,288,74.7C336,75,384,101,432,112C480,123,528,117,576,101C624,85,672,59,720,58.7C768,59,816,85,864,96C912,107,960,101,1008,90.7C1056,80,1104,64,1152,64C1200,64,1248,80,1296,85.3C1344,91,1392,85,1416,82.7L1440,80L1440,240L0,240Z",
+                        "M0,64C48,75,96,85,144,96C192,107,240,117,288,112C336,107,384,85,432,80C480,75,528,85,576,96C624,107,672,117,720,112C768,107,816,85,864,74.7C912,64,960,43,1008,48C1056,53,1104,85,1152,90.7C1200,96,1248,75,1296,64C1344,53,1392,53,1416,53.3L1440,53.3L1440,240L0,240Z",
+                        "M0,80C48,96,96,112,144,106.7C192,101,240,75,288,74.7C336,75,384,101,432,112C480,123,528,117,576,101C624,85,672,59,720,58.7C768,59,816,85,864,96C912,107,960,101,1008,90.7C1056,80,1104,64,1152,64C1200,64,1248,80,1296,85.3C1344,91,1392,85,1416,82.7L1440,80L1440,240L0,240Z"
+                      ]
+                    }}
+                    transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+                    fill="#ffffff"
+                  />
+                </svg>
+
+              </div>
+              
+              {/* Overlay brand text using an elegant, minimalist sand color layout */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.h1 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: [0, 1, 1, 0], y: 0 }}
+                  transition={{ times: [0, 0.15, 0.75, 1], duration: 2.6 }}
+                  className="text-4xl md:text-5xl font-black tracking-[0.3em] text-[#fef08a] uppercase drop-shadow-[0_4px_12px_rgba(11,51,45,0.5)] font-sans"
+                >
+                  FreshMarket
+                </motion.h1>
+              </div>
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ================= HEADER NAVBAR LAYER ================= */}
-      {/* Updated links logic passing auth view controls into buttons triggers */}
       <nav className="flex items-center justify-between px-8 py-4 bg-purple-900/40 backdrop-blur-md border-b border-purple-800/30 sticky top-0 z-50">
         <div 
           className="text-xl font-black tracking-wider text-yellow-300 cursor-pointer" 
@@ -93,7 +176,6 @@ function App() {
         </div>
       </nav>
       
-      {/* Interactive Slide-out Basket Drawer Component */}
       <Basket isOpen={isBasketOpen} onClose={() => setIsBasketOpen(false)} cart={cart} onRemove={removeFromCart} totalPrice={totalPrice} />
 
       {/* ================= CONDITION 1: MAIN E-COMMERCE STORE VIEWS ================= */}
@@ -174,10 +256,9 @@ function App() {
         </>
       )}
 
-      {/* ================= CONDITION 2: REGISTRATION SCREEN VIEW (Matches image_d2cafc.png) ================= */}
+      {/* ================= CONDITION 2: REGISTRATION SCREEN VIEW ================= */}
       {authView === 'register' && (
         <div className="relative min-h-[90vh] flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center px-4">
-          {/* Deep sunset cinematic tint overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-purple-950/60 to-pink-900/40 backdrop-blur-[2px]"></div>
 
           <motion.div 
@@ -185,13 +266,11 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             className="relative w-full max-w-md bg-white/10 border border-white/20 rounded-3xl p-8 backdrop-blur-xl shadow-2xl text-center"
           >
-            {/* Top Close Button cross icon mark */}
             <button onClick={() => setAuthView('all')} className="absolute top-4 right-4 text-white/50 hover:text-white border border-white/10 w-7 h-7 flex items-center justify-center rounded-lg text-xs bg-white/5">✕</button>
 
             <h2 className="text-2xl font-bold text-purple-950 mb-8 tracking-wide">Registration</h2>
             
             <form onSubmit={handleRegisterSubmit} className="space-y-6 text-left">
-              {/* Name Field */}
               <div className="relative border-b border-purple-950/30 pb-1">
                 <span className="absolute right-2 bottom-2 text-purple-950/40 text-sm">👤</span>
                 <input 
@@ -204,7 +283,6 @@ function App() {
                 />
               </div>
 
-              {/* Email Field */}
               <div className="relative border-b border-purple-950/30 pb-1">
                 <span className="absolute right-2 bottom-2 text-purple-950/40 text-sm">✉️</span>
                 <input 
@@ -217,7 +295,6 @@ function App() {
                 />
               </div>
 
-              {/* Password Field */}
               <div className="relative border-b border-purple-950/30 pb-1">
                 <span className="absolute right-2 bottom-2 text-purple-950/40 text-sm">🔒</span>
                 <input 
@@ -230,7 +307,6 @@ function App() {
                 />
               </div>
 
-              {/* Terms Checkbox checkbox box */}
               <div className="flex items-center gap-2 text-xs text-purple-950 font-medium pt-2">
                 <input 
                   type="checkbox" 
@@ -241,7 +317,6 @@ function App() {
                 <label>I Agree to the <span className="underline cursor-pointer hover:text-purple-800">Terms & Conditions</span></label>
               </div>
 
-              {/* Submit Action Registration Trigger */}
               <button type="submit" className="w-full bg-purple-900 hover:bg-purple-950 text-white font-bold py-3.5 rounded-full text-sm shadow-md mt-4 active:scale-[0.99] transition-transform">
                 Register
               </button>
@@ -254,10 +329,9 @@ function App() {
         </div>
       )}
 
-      {/* ================= CONDITION 3: LOGIN SCREEN VIEW (Matches image_d2cae4.jpg) ================= */}
+      {/* ================= CONDITION 3: LOGIN SCREEN VIEW ================= */}
       {authView === 'login' && (
         <div className="relative min-h-[90vh] flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center px-4">
-          {/* Deep dark starry night haze mist blur overlay container */}
           <div className="absolute inset-0 bg-purple-950/75 backdrop-blur-[2px]"></div>
 
           <motion.div 
@@ -265,13 +339,11 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             className="relative w-full max-w-md bg-white/10 border border-white/20 rounded-3xl p-8 backdrop-blur-xl shadow-2xl text-center"
           >
-            {/* Top Close Button cross icon mark */}
             <button onClick={() => setAuthView('all')} className="absolute top-4 right-4 text-white/50 hover:text-white border border-white/10 w-7 h-7 flex items-center justify-center rounded-lg text-xs bg-white/5">✕</button>
 
             <h2 className="text-3xl font-black text-white mb-8 tracking-wide">Login</h2>
             
             <form onSubmit={handleLoginSubmit} className="space-y-6 text-left">
-              {/* Username Input Container */}
               <div className="relative bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
                 <input 
                   type="text" 
@@ -284,7 +356,6 @@ function App() {
                 <span className="text-white/40 text-sm">👤</span>
               </div>
 
-              {/* Password Input Container */}
               <div className="relative bg-white/5 border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
                 <input 
                   type="password" 
@@ -297,7 +368,6 @@ function App() {
                 <span className="text-white/40 text-sm">🔒</span>
               </div>
 
-              {/* Remember me & Forgot utilities links text layout plate */}
               <div className="flex items-center justify-between text-xs text-white/80 font-light pt-1 px-1">
                 <div className="flex items-center gap-2">
                   <input 
@@ -311,7 +381,6 @@ function App() {
                 <span onClick={() => alert('Reset link dropped to linked server! 🔑')} className="hover:underline hover:text-white cursor-pointer transition">Forgot password?</span>
               </div>
 
-              {/* Action Submit Login Trigger button */}
               <button type="submit" className="w-full bg-white text-purple-950 font-black py-4 rounded-full text-center tracking-wide text-sm shadow-lg hover:bg-purple-100 mt-4 active:scale-[0.99] transition-transform">
                 Login
               </button>
